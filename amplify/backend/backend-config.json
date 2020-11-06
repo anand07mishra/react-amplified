@@ -1,0 +1,16 @@
+{
+  "auth": {
+    "rsivideosolution1b25cc380": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false
+    }
+  },
+  "storage": {
+    "VODUpload": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation"
+    }
+  }
+}
