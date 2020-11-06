@@ -2,7 +2,6 @@ import React from 'react';
 import 'antd/dist/antd.css';
 import Amplify, { Storage } from 'aws-amplify';
 import awsconfig from './aws-exports';
-
 import { Upload, message, Spin } from 'antd';
 import { InboxOutlined, LoadingOutlined } from '@ant-design/icons';
 
@@ -10,30 +9,33 @@ Amplify.configure(awsconfig);
 
 const { Dragger } = Upload;
 
-const props = {
-    accept: 'video/mp4',
-    customRequest(info) {
-        Storage.put(info.file.name, info.file, {
+class UploadArea extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = { loading: false };
+        this.toggle = value => {
+            this.setState({ loading: value });
+        };
+    }
+    handleUpload = (info) => {
+        Storage.put(info.file, info, {
             progressCallback(progress) {
                 var percnt = Math.round((progress.loaded / progress.total) * 100);
                 message.loading(`Upload in progress...${percnt}%`, 0.01);
             },
         })
-            .then(result => message.success('Upload Completed'))
-            .catch(err => message.error('Error in uploading!'));
-    },
-};
+            .then(result => this.handleError())
+            .catch(err => console.log('Error in uploading!'));            
+    };
 
-class UploadArea extends React.Component {
-    state = { loading: false };
-
-    toggle = value => {
-        this.setState({ loading: value });
+    handleError = () => {
+        message.success('Upload Completed');
+        this.setState({ loading: false });
     };
 
     render() {
         const container = (
-            <Dragger {...props} onSuccess={this.toggle}>
+            <Dragger accept='video/mp4' action={this.handleUpload} onChange={this.toggle}>
                 <p className="ant-upload-drag-icon">
                     <InboxOutlined />
                 </p>
@@ -44,7 +46,9 @@ class UploadArea extends React.Component {
             </p>
             </Dragger>
         );
+
         const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
+
         return (
             <Spin indicator={antIcon} spinning={this.state.loading} delay={500}>
                 {container}
