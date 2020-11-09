@@ -1,6 +1,5 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import { Layout, Menu, Breadcrumb } from 'antd';
 import {
   DesktopOutlined,
   HomeOutlined,
@@ -9,8 +8,7 @@ import {
 } from '@ant-design/icons';
 import VideoList from './VideoList';
 import UploadArea from './UploadArea';
-
-import { Space, Card } from 'antd';
+import { Layout, Menu, Breadcrumb, Space, Card, Row, Col } from 'antd';
 
 
 
@@ -59,12 +57,14 @@ class SiderLayout extends React.Component {
             </Breadcrumb>
             <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
               <Space direction="vertical">
-                <Card title="Upload">
-                  <UploadArea />
-                </Card>
-
+                <Row>
+                  <Col span={24}>
+                    <Card title="Upload">
+                      <UploadArea />
+                    </Card>
+                  </Col>
+                </Row>
                 <VideoList />
-
               </Space>
             </div>
           </Content>

@@ -1,11 +1,8 @@
 import React from 'react';
 import 'antd/dist/antd.css';
-import Amplify, { Storage } from 'aws-amplify';
-import awsconfig from './aws-exports';
+import { Storage } from 'aws-amplify';
 import { Upload, message, Spin } from 'antd';
 import { InboxOutlined, LoadingOutlined } from '@ant-design/icons';
-
-Amplify.configure(awsconfig);
 
 const { Dragger } = Upload;
 
@@ -18,19 +15,23 @@ class UploadArea extends React.Component {
         };
     }
     handleUpload = (info) => {
-        Storage.put(info.file, info, {
+        Storage.put(info.name, info, {
             progressCallback(progress) {
                 var percnt = Math.round((progress.loaded / progress.total) * 100);
-                message.loading(`Upload in progress...${percnt}%`, 0.01);
+                if (percnt % 10 === 0) {
+                    message.destroy();
+                    message.loading(`Upload in progress...${percnt}%`);
+                }
             },
         })
             .then(result => this.handleError())
-            .catch(err => console.log('Error in uploading!'));            
+            .catch(err => console.log('Error in uploading!'));
     };
 
     handleError = () => {
         message.success('Upload Completed');
         this.setState({ loading: false });
+        window.location.reload();
     };
 
     render() {

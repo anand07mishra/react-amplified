@@ -1,68 +1,68 @@
 import React from 'react'
 import 'antd/dist/antd.css';
-import { Card, Popover, Descriptions, Badge } from 'antd';
+import { Card, Row, Col, Descriptions, Badge, Button, Space } from 'antd';
+import { Storage } from 'aws-amplify';
 
 const gridStyle = {
-    width: '30%',
+    width: '50%',
     textAlign: 'center',
 };
 
-const content = (
-    <Descriptions
-        title="Info"
-        bordered
-        column={{ xxl: 4, xl: 3, lg: 3, md: 3, sm: 2, xs: 1 }}
-    >
-        <Descriptions.Item label="Video Title">Video Name</Descriptions.Item>
-        <Descriptions.Item label="Resolution">1920 x 1080</Descriptions.Item>
-        <Descriptions.Item label="Bitrate">85k</Descriptions.Item>
-        <Descriptions.Item label="Encoder">H.264</Descriptions.Item>
-        <Descriptions.Item label="Codec">mp4</Descriptions.Item>
-        <Descriptions.Item label="Status"><Badge status="processing" />In Progress</Descriptions.Item>
-    </Descriptions>
-);
+class VideoList extends React.Component {
+    constructor(props) {
+        super(props);
+        this.state = {
+            error: null,
+            uploadedList: []
+        }
+    }
+    render() {
+        Storage.list('') // for listing ALL files without prefix, pass '' instead
+            .then(
+                (result) => {
+                    this.setState({
+                        uploadedList: result
+                    });
+                },
+                (error) => {
+                    this.setState({ error });
+                }
+            );
+        const { error, uploadedList } = this.state;
+        var { videoName, videoSize } = this.state;
+        if (error) {
+            return (
+                <div>Error: {error.message}</div>
+            );
+        } else {
+            return (
+                <Row>
+                    <Col span={16}>
+                        <Card title="Video List" >
+                            {uploadedList && uploadedList.map(item =>
+                                <Card.Grid style={gridStyle}>
+                                    <video style={{ width: 300 }} src={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} type="video/mp4" controls></video><br />
+                                    <p>{item.key}</p>
+                                    {videoName = item.key}
+                                    {videoSize = item.size}
+                                </Card.Grid>
+                            )}
+                        </Card>
+                    </Col>
+                    <Col span={8}>
+                        <Card title="Info">
+                            <Descriptions bordered layout="vertical" size="large" extra={<Space><Button type="primary">Edit</Button><Button type="primary">Trancode</Button><Button type="primary" danger>Delete</Button></Space>}>
+                                <Descriptions.Item label="Video Title">{videoName}</Descriptions.Item>
+                                <Descriptions.Item label="Size">{Math.round(videoSize/1000000)}MB</Descriptions.Item>
+                                <Descriptions.Item label="Status"><Badge status="processing" />In Progress</Descriptions.Item>
+                            </Descriptions>
+                        </Card>
+                    </Col>
+                </Row >
+            );
+        }
 
-function VideoList() {
-    return (
-        <Card title="Video List">
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 1</p>
-                </Card.Grid>
-            </Popover>
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 2</p>
-                </Card.Grid>
-            </Popover>
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 3</p>
-                </Card.Grid>
-            </Popover>
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 4</p>
-                </Card.Grid>
-            </Popover>
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 5</p>
-                </Card.Grid>
-            </Popover>
-            <Popover content={content}>
-                <Card.Grid style={gridStyle}>
-                    <video id="video" src="http://www.w3schools.com/html/mov_bbb.mp4" type="video/mp4" controls></video><br />
-                    <p>Video 6</p>
-                </Card.Grid>
-            </Popover>
-        </Card>
-    )
+    }
 }
 
-export default VideoList
+export default VideoList;
