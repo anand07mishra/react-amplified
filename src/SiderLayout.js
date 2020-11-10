@@ -64,7 +64,13 @@ class SiderLayout extends React.Component {
                     </Card>
                   </Col>
                 </Row>
-                <VideoList />
+                <Row>
+                  <Col span={24}>
+                    <Card title="Video List" >
+                      <VideoList />
+                    </Card>
+                  </Col>
+                </Row>
               </Space>
             </div>
           </Content>
