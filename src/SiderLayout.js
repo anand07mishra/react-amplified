@@ -39,8 +39,7 @@ class SiderLayout extends React.Component {
               Live
             </Menu.Item>
             <SubMenu key="sub1" icon={<YoutubeOutlined />} title="VOD">
-              <Menu.Item key="3">Movies</Menu.Item>
-              <Menu.Item key="4">TV Series</Menu.Item>
+              <Menu.Item key="3">Playlist</Menu.Item>              
             </SubMenu>
             <SubMenu key="sub2" icon={<UserOutlined />} title="User">
               <Menu.Item key="5">Profile</Menu.Item>
@@ -66,7 +65,7 @@ class SiderLayout extends React.Component {
                 </Row>
                 <Row>
                   <Col span={24}>
-                    <Card title="Video List" >
+                    <Card title="Playlist" >
                       <VideoList />
                     </Card>
                   </Col>
