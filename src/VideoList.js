@@ -1,11 +1,22 @@
 import React from 'react'
 import 'antd/dist/antd.css';
 import { Card, Descriptions, Button, Space, Drawer } from 'antd';
-import { Storage } from 'aws-amplify';
+import { Storage, API } from 'aws-amplify';
 
 const gridStyle = {
     width: '50%',
     textAlign: 'center',
+};
+
+const apiName = 'processVideo'; // replace this with your api name.
+const path = '/admin'; //replace this with the path you have configured on your API
+const myInit = { // OPTIONAL
+    headers: {}, // OPTIONAL
+    response: true, // OPTIONAL (return the entire Axios response object instead of only response.data)
+    queryStringParameters: {  // OPTIONAL
+        firstName: 'Transcoding',
+        lastName: 'Started...',
+    },
 };
 
 class VideoList extends React.Component {
@@ -50,7 +61,7 @@ class VideoList extends React.Component {
                         <Card.Grid style={gridStyle} key={i++}>
                             <div className="site-drawer-render-in-current-wrapper">
                                 <video style={{ width: 300, height: 180 }} src={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} type="video/mp4" controls></video><br />
-                                <Button id={item.eTag.substr(1, 4)} type="dashed" onClick={this.showDrawer}>
+                                <Button id={item.eTag.substr(1, 4)} onClick={this.showDrawer}>
                                     {item.key}
                                 </Button>
                                 <Drawer
@@ -70,7 +81,14 @@ class VideoList extends React.Component {
                                     </Descriptions>
                                     <br />
                                     <Space>
-                                        <Button type="primary">Edit</Button>
+                                        <Button type="primary" onClick={() =>
+                                            API.get(apiName, path, myInit)
+                                                .then(response => {
+                                                    console.log(response);
+                                                })
+                                                .catch(error => {
+                                                    console.log(error.response);
+                                                })}>Edit</Button>
                                         <Button type="primary">Trancode</Button>
                                         <Button type="primary" danger onClick={() => Storage.remove(item.key)
                                             .then(result => console.log(result))
