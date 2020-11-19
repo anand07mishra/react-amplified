@@ -74,7 +74,7 @@ class VideoList extends React.Component {
                                     placement="bottom"
                                     closable={true}
                                     onClose={this.onClose}
-                                    visible={this.state.[item.eTag.substr(1, 4)]}
+                                    visible={this.state[item.eTag.substr(1, 4)]}
                                     getContainer={false}
                                     destroyOnClose={true}
                                     style={{ position: 'absolute' }}
