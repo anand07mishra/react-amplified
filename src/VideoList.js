@@ -88,7 +88,7 @@ class VideoList extends React.Component {
                                         <Button type="primary">Edit</Button>
                                         <Button type="primary" onClick={() =>
                                             API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
-                                                console.log(result);
+                                                console.log(result.data);
                                             }).catch(err => {
                                                 console.log(err);
                                             })

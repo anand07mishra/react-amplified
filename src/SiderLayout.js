@@ -8,9 +8,8 @@ import {
 } from '@ant-design/icons';
 import VideoList from './VideoList';
 import UploadArea from './UploadArea';
+import MappingTable from './MappingTable';
 import { Layout, Menu, Breadcrumb, Space, Card, Row, Col } from 'antd';
-
-
 
 const { Content, Footer, Sider } = Layout;
 const { SubMenu } = Menu;
@@ -39,7 +38,7 @@ class SiderLayout extends React.Component {
               Live
             </Menu.Item>
             <SubMenu key="sub1" icon={<YoutubeOutlined />} title="VOD">
-              <Menu.Item key="3">Playlist</Menu.Item>              
+              <Menu.Item key="3">Playlist</Menu.Item>
             </SubMenu>
             <SubMenu key="sub2" icon={<UserOutlined />} title="User">
               <Menu.Item key="5">Profile</Menu.Item>
@@ -70,6 +69,7 @@ class SiderLayout extends React.Component {
                     </Card>
                   </Col>
                 </Row>
+                <MappingTable />
               </Space>
             </div>
           </Content>
