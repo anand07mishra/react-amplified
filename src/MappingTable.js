@@ -7,7 +7,7 @@ Amplify.configure({
         endpoints: [
             {
                 name: "CopyFileHandler-API",
-                endpoint: "https://jsonplaceholder.typicode.com"
+                endpoint: "https://0yq213qelk.execute-api.us-west-2.amazonaws.com/user"
             }
         ]
     }
@@ -15,24 +15,14 @@ Amplify.configure({
 
 const columns = [
     {
-        title: 'User Id',
-        dataIndex: 'userId',
-        key: 'userId',
+        title: 'File Name',
+        dataIndex: 'fileName',
+        key: 'fileName',
     },
     {
-        title: 'Id',
-        dataIndex: 'id',
-        key: 'id',
-    },
-    {
-        title: 'Title',
-        dataIndex: 'title',
-        key: 'title',
-    },
-    {
-        title: 'Body',
-        dataIndex: 'body',
-        key: 'body',
+        title: 'Asset Url',
+        dataIndex: 'assetUrl',
+        key: 'assetUrl',
     }
 ];
 
@@ -45,9 +35,10 @@ class MappingTable extends React.Component {
     }
 
     render() {
-        API.get('CopyFileHandler-API', '/posts', {}).then((result) => {
+
+        API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
             this.setState({
-                data: result
+                data: result.responseBody
             });
         }).catch(err => {
             console.log(err);
