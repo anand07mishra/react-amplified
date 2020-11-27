@@ -2,7 +2,7 @@ import React from 'react';
 import {
   Route,
   NavLink,
-  HashRouter
+  BrowserRouter
 } from 'react-router-dom';
 import 'antd/dist/antd.css';
 import {
@@ -34,7 +34,7 @@ class SiderLayout extends React.Component {
     const { collapsed } = this.state;
     return (
       <Layout style={{ minHeight: '100vh' }}>
-        <HashRouter>
+        <BrowserRouter>
           <Sider collapsible collapsed={collapsed} onCollapse={this.onCollapse}>
             <div className="logo" />
             <Menu theme="dark" defaultSelectedKeys={['1']} mode="inline">
@@ -58,14 +58,14 @@ class SiderLayout extends React.Component {
           <Layout className="site-layout">
             <Content style={{ margin: '0 16px' }}>
               <div className="site-layout-background" style={{ padding: 24, minHeight: 360 }}>
-                <Route path="/" component={Home} />
-                <Route path="/Playlist" component={Playlist} />
-                <Route path="/MappingTable" component={MappingTable} />
+                <Route exact path="/" component={Home} />
+                <Route exact path="/Playlist" component={Playlist} />
+                <Route exact path="/MappingTable" component={MappingTable} />
               </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>RSI Video Solution ©2020 Created by R Systems International Pvt. Ltd.</Footer>
           </Layout>
-        </HashRouter>
+        </BrowserRouter>
       </Layout>
     );
   }

@@ -1,7 +1,8 @@
 import React from 'react'
 import 'antd/dist/antd.css';
-import { Card, Descriptions, Button, Space, Drawer } from 'antd';
+import { Card, Descriptions, Button, Space, Drawer, Typography, message } from 'antd';
 import { Storage, API, Amplify } from 'aws-amplify';
+import { InfoCircleTwoTone } from '@ant-design/icons';
 Amplify.configure({
     API: {
         endpoints: [
@@ -12,6 +13,8 @@ Amplify.configure({
         ]
     }
 });
+
+const { Text } = Typography;
 
 const gridStyle = {
     width: '50%',
@@ -28,7 +31,9 @@ class VideoList extends React.Component {
         super(props);
         this.state = {
             error: null,
-            uploadedList: []
+            uploadedList: [],
+            data: [],
+            loading: false
         }
     }
 
@@ -41,6 +46,21 @@ class VideoList extends React.Component {
     };
 
     render() {
+
+        API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
+            this.setState({
+                data: result.responseBody
+            });
+        }).catch(err => {
+            console.log(err);
+        });
+
+        var videoName = {};
+
+        this.state.data.map(item =>
+            videoName[item.fileName] = item.assetUrl
+        );
+
         Storage.list('') // for listing ALL files without prefix, pass '' instead
             .then(
                 (result) => {
@@ -65,7 +85,7 @@ class VideoList extends React.Component {
                         <Card.Grid style={gridStyle} key={i++}>
                             <div className="site-drawer-render-in-current-wrapper">
                                 <video style={{ width: 300, height: 180 }} src={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} type="video/mp4" controls></video><br />
-                                <Button id={item.eTag.substr(1, 4)} onClick={this.showDrawer}>
+                                <Button id={item.eTag.substr(1, 4)} icon={<InfoCircleTwoTone />} onClick={this.showDrawer}>
                                     {item.key}
                                 </Button>
                                 <Drawer
@@ -78,30 +98,44 @@ class VideoList extends React.Component {
                                     getContainer={false}
                                     destroyOnClose={true}
                                     style={{ position: 'absolute' }}
-                                >
-                                    <Descriptions bordered layout="vertical" size="large">
-                                        <Descriptions.Item label="Video Title">{item.key}</Descriptions.Item>
-                                        <Descriptions.Item label="Size">{Math.round(item.size / 1000000)}MB</Descriptions.Item>
-                                    </Descriptions>
-                                    <br />
-                                    <Space>
-                                        <Button type="primary">Edit</Button>
-                                        <Button type="primary" onClick={() =>
-                                            API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
-                                                console.log(result.data);
-                                            }).catch(err => {
-                                                console.log(err);
-                                            })
-                                        }>Trancode</Button>
-                                        <Button type="primary" danger onClick={() => Storage.remove(item.key)
-                                            .then(result => console.log(result))
-                                            .catch(err => console.log(err))}>Delete</Button>
+                                ><Space direction="vertical">
+                                        <Descriptions bordered layout="vertical" size="small">
+                                            <Descriptions.Item label="Title">{item.key.split('.')[0]}</Descriptions.Item>
+                                            <Descriptions.Item label="Size">{Math.round(item.size / 1000000)}MB</Descriptions.Item>
+                                            <Descriptions.Item label="Format">{item.key.split('.').reverse()[0]}</Descriptions.Item>
+                                        </Descriptions>
+                                        {videoName[item.key.split('.')[0]] !== undefined ?
+                                            <Text code>Transcoded URL: {videoName[item.key.split('.')[0]]}</Text>
+                                            : null}
+                                        <Space>
+                                            <Button type="primary" ghost size='small'>Edit</Button>
+                                            {videoName[item.key.split('.')[0]] === undefined ?
+                                                <Button type="primary" disabled={this.state[item.eTag.substr(1, 6)]} size='small' loading={this.state.loading} onClick={() => {
+                                                    this.setState({ loading: true });
+                                                    API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
+                                                        console.log(result.data);
+                                                        this.setState({
+                                                            loading: false,
+                                                            [item.eTag.substr(1, 6)]: true
+                                                        });
+
+                                                        message.loading(`Transcoding started... Playback URL will be ready after some time.`, 10);
+                                                    }).catch(err => {
+                                                        console.log(err);
+                                                    })
+                                                }}>Transcode</Button>
+                                                : null}
+                                            <Button type="primary" danger size='small' onClick={() => Storage.remove(item.key)
+                                                .then(result => console.log(result))
+                                                .catch(err => console.log(err))}>Delete</Button>
+                                        </Space>
                                     </Space>
                                 </Drawer>
                             </div>
                         </Card.Grid>
-                    )}
-                </div>
+                    )
+                    }
+                </div >
             );
         }
 
