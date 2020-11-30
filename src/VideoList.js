@@ -32,8 +32,7 @@ class VideoList extends React.Component {
         this.state = {
             error: null,
             uploadedList: [],
-            data: [],
-            loading: false
+            data: []
         }
     }
 
@@ -110,16 +109,15 @@ class VideoList extends React.Component {
                                         <Space>
                                             <Button type="primary" ghost size='small'>Edit</Button>
                                             {videoName[item.key.split('.')[0]] === undefined ?
-                                                <Button type="primary" disabled={this.state[item.eTag.substr(1, 6)]} size='small' loading={this.state.loading} onClick={() => {
-                                                    this.setState({ loading: true });
+                                                <Button type="primary" disabled={this.state[item.eTag.substr(1, 6)]} size='small' loading={this.state[item.eTag.substr(1, 5)]} onClick={() => {
+                                                    this.setState({ [item.eTag.substr(1, 5)]: true });
                                                     API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
                                                         console.log(result.data);
                                                         this.setState({
-                                                            loading: false,
+                                                            [item.eTag.substr(1, 5)]: false,
                                                             [item.eTag.substr(1, 6)]: true
                                                         });
-
-                                                        message.loading(`Transcoding started... Playback URL will be ready after some time.`, 10);
+                                                        message.loading(`Transcoding started... Playback URL will be ready after some time.`);
                                                     }).catch(err => {
                                                         console.log(err);
                                                     })
