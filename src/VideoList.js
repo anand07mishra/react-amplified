@@ -47,6 +47,7 @@ class VideoList extends React.Component {
     };
 
     componentDidMount() {
+        console.log("Inside componentDidMount");
         API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
             this.setState({
                 data: result.responseBody
