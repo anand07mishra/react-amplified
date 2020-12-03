@@ -32,7 +32,9 @@ class VideoList extends React.Component {
         this.state = {
             error: null,
             uploadedList: [],
-            data: []
+            data: [],
+            tags: [],
+            signedURL: null
         }
     }
 
@@ -44,8 +46,7 @@ class VideoList extends React.Component {
         this.setState({ [e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id]: false });
     };
 
-    render() {
-
+    componentDidMount() {
         API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
             this.setState({
                 data: result.responseBody
@@ -54,11 +55,13 @@ class VideoList extends React.Component {
             console.log(err);
         });
 
-        var videoName = {};
-
-        this.state.data.map(item =>
-            videoName[item.fileName] = item.assetUrl
-        );
+        API.get('CopyFileHandler-API', '/admin/s3objectstag', {}).then((result) => {
+            this.setState({
+                tags: result.responseBody
+            });
+        }).catch(err => {
+            console.log(err);
+        });
 
         Storage.list('') // for listing ALL files without prefix, pass '' instead
             .then(
@@ -71,6 +74,19 @@ class VideoList extends React.Component {
                     this.setState({ error });
                 }
             );
+    }
+
+    render() {
+        var videoName = {}, videoTags = {};
+
+        this.state.data.map(item =>
+            videoName[item.fileName] = item.assetUrl
+        );
+
+        this.state.tags.map(item =>
+            videoTags[item.fileName] = true
+        );
+
         const { error, uploadedList } = this.state;
         var i = 0;
         if (error) {
@@ -80,8 +96,9 @@ class VideoList extends React.Component {
         } else {
             return (
                 <div>
-                    {uploadedList.map(item =>
-                        <Card.Grid style={gridStyle} key={i++}>
+                    {uploadedList.map(item => {
+                        //let videoURL = this.state.signedURL;
+                        return < Card.Grid style={gridStyle} key={i++}>
                             <div className="site-drawer-render-in-current-wrapper">
                                 <video style={{ width: 300, height: 180 }} src={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} type="video/mp4" controls></video><br />
                                 <Button id={item.eTag.substr(1, 4)} icon={<InfoCircleTwoTone />} onClick={this.showDrawer}>
@@ -109,13 +126,12 @@ class VideoList extends React.Component {
                                         <Space>
                                             <Button type="primary" ghost size='small'>Edit</Button>
                                             {videoName[item.key.split('.')[0]] === undefined ?
-                                                <Button type="primary" disabled={this.state[item.eTag.substr(1, 6)]} size='small' loading={this.state[item.eTag.substr(1, 5)]} onClick={() => {
+                                                <Button type="primary" disabled={videoTags[item.key]} size='small' loading={this.state[item.eTag.substr(1, 5)]} onClick={() => {
                                                     this.setState({ [item.eTag.substr(1, 5)]: true });
                                                     API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
                                                         console.log(result.data);
                                                         this.setState({
-                                                            [item.eTag.substr(1, 5)]: false,
-                                                            [item.eTag.substr(1, 6)]: true
+                                                            [item.eTag.substr(1, 5)]: false
                                                         });
                                                         message.loading(`Transcoding started... Playback URL will be ready after some time.`);
                                                     }).catch(err => {
@@ -131,7 +147,7 @@ class VideoList extends React.Component {
                                 </Drawer>
                             </div>
                         </Card.Grid>
-                    )
+                    })
                     }
                 </div >
             );
