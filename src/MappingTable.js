@@ -34,8 +34,7 @@ class MappingTable extends React.Component {
         }
     }
 
-    render() {
-
+    componentDidMount() {
         API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
             this.setState({
                 data: result.responseBody
@@ -43,7 +42,9 @@ class MappingTable extends React.Component {
         }).catch(err => {
             console.log(err);
         });
+    }
 
+    render() {
         return (
             <Table columns={columns} dataSource={this.state.data} />
         );
