@@ -3,12 +3,14 @@ import 'antd/dist/antd.css';
 import { Card, Descriptions, Button, Space, Drawer, Typography, message } from 'antd';
 import { Storage, API, Amplify } from 'aws-amplify';
 import { InfoCircleTwoTone } from '@ant-design/icons';
+import ReactPlayer from 'react-player/lazy'
+
 Amplify.configure({
     API: {
         endpoints: [
             {
-                name: "CopyFileHandler-API",
-                endpoint: "https://0yq213qelk.execute-api.us-west-2.amazonaws.com/user"
+                name: "AdminVODAPI",
+                endpoint: "https://kccs8cd1ci.execute-api.us-west-2.amazonaws.com/user"
             }
         ]
     }
@@ -48,7 +50,7 @@ class VideoList extends React.Component {
 
     componentDidMount() {
         console.log("Inside componentDidMount");
-        API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
+        API.get('AdminVODAPI', '/admin/asseturls', {}).then((result) => {
             this.setState({
                 data: result.responseBody
             });
@@ -56,7 +58,7 @@ class VideoList extends React.Component {
             console.log(err);
         });
 
-        API.get('CopyFileHandler-API', '/admin/s3objectstag', {}).then((result) => {
+        API.get('AdminVODAPI', '/admin/s3objectstag', {}).then((result) => {
             this.setState({
                 tags: result.responseBody
             });
@@ -101,7 +103,8 @@ class VideoList extends React.Component {
                         //let videoURL = this.state.signedURL;
                         return < Card.Grid style={gridStyle} key={i++}>
                             <div className="site-drawer-render-in-current-wrapper">
-                                <video style={{ width: 300, height: 180 }} src={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} type="video/mp4" controls></video><br />
+                                <ReactPlayer pip='true' controls='true' width='460px' height='320px' url={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} />
+                                <br />
                                 <Button id={item.eTag.substr(1, 4)} icon={<InfoCircleTwoTone />} onClick={this.showDrawer}>
                                     {item.key}
                                 </Button>
@@ -129,7 +132,7 @@ class VideoList extends React.Component {
                                             {videoName[item.key.split('.')[0]] === undefined ?
                                                 <Button type="primary" disabled={videoTags[item.key]} size='small' loading={this.state[item.eTag.substr(1, 5)]} onClick={() => {
                                                     this.setState({ [item.eTag.substr(1, 5)]: true });
-                                                    API.get('CopyFileHandler-API', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
+                                                    API.get('AdminVODAPI', '/admin/processVideo?fileName=' + item.key, myInit).then((result) => {
                                                         console.log(result.data);
                                                         this.setState({
                                                             [item.eTag.substr(1, 5)]: false

@@ -13,6 +13,8 @@ import {
 } from '@ant-design/icons';
 import Playlist from './Playlist';
 import MappingTable from './MappingTable';
+import LiveTable from './LiveTable';
+import CreateChannel from './CreateChannel';
 import Home from './Home';
 
 import { Layout, Menu } from 'antd';
@@ -42,8 +44,8 @@ class SiderLayout extends React.Component {
                 <NavLink to="/">RSI Video Solution</NavLink>
               </Menu.Item>
               <Menu.Item key="2" icon={<DesktopOutlined />}>
-                Live
-            </Menu.Item>
+                <NavLink to="/LiveTable">Live</NavLink>
+              </Menu.Item>
               <SubMenu key="sub1" icon={<YoutubeOutlined />} title="VOD">
                 <Menu.Item key="3"><NavLink to="/Playlist">Playlist</NavLink></Menu.Item>
                 <Menu.Item key="4"><NavLink to="/MappingTable">Mapping</NavLink></Menu.Item>
@@ -61,6 +63,8 @@ class SiderLayout extends React.Component {
                 <Route exact path="/" component={Home} />
                 <Route exact path="/Playlist" component={Playlist} />
                 <Route exact path="/MappingTable" component={MappingTable} />
+                <Route exact path="/LiveTable" component={LiveTable} />
+                <Route exact path="/CreateChannel" component={CreateChannel} />
               </div>
             </Content>
             <Footer style={{ textAlign: 'center' }}>RSI Video Solution ©2020 Created by R Systems International Pvt. Ltd.</Footer>

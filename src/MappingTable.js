@@ -6,8 +6,8 @@ Amplify.configure({
     API: {
         endpoints: [
             {
-                name: "CopyFileHandler-API",
-                endpoint: "https://0yq213qelk.execute-api.us-west-2.amazonaws.com/user"
+                name: "AdminVODAPI",
+                endpoint: "https://kccs8cd1ci.execute-api.us-west-2.amazonaws.com/user"
             }
         ]
     }
@@ -35,10 +35,11 @@ class MappingTable extends React.Component {
     }
 
     componentDidMount() {
-        API.get('CopyFileHandler-API', '/admin/asseturls', {}).then((result) => {
+        API.get('AdminVODAPI', '/admin/asseturls', {}).then((result) => {
             this.setState({
                 data: result.responseBody
             });
+            console.log(result);
         }).catch(err => {
             console.log(err);
         });
