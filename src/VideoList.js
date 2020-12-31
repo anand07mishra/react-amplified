@@ -103,7 +103,7 @@ class VideoList extends React.Component {
                         //let videoURL = this.state.signedURL;
                         return < Card.Grid style={gridStyle} key={i++}>
                             <div className="site-drawer-render-in-current-wrapper">
-                                <ReactPlayer pip='true' controls='true' width='460px' height='320px' url={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} />
+                                <ReactPlayer pip={true} controls={true} width='460px' height='320px' url={"https://rsivideosolution-upload173311-dev.s3-us-west-2.amazonaws.com/public/" + item.key} />
                                 <br />
                                 <Button id={item.eTag.substr(1, 4)} icon={<InfoCircleTwoTone />} onClick={this.showDrawer}>
                                     {item.key}

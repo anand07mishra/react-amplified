@@ -1,11 +1,9 @@
 import React from 'react';
-import ReactDOM from 'react-dom';
 import 'antd/dist/antd.css';
 import './index.css';
-import { Form, Input, InputNumber, Button, Radio } from 'antd';
+import { Form, Input, Button } from 'antd';
 import { Select } from 'antd';
-import { Storage, API, Amplify } from 'aws-amplify';
-import { InfoCircleTwoTone } from '@ant-design/icons';
+import { API, Amplify } from 'aws-amplify';
 import 'antd/dist/antd.css';
 import './index.css';
 import { Tooltip } from 'antd';
@@ -30,17 +28,9 @@ const layout = {
 };
 
 const validateMessages = {
-  required: '${label} is required!'
+  required: '{label} is required!'
 };
 
-const Demo = () => {  
-  const onFinish = (values) => {
-    console.log(values);
-  };
-};
-
-
-const OPTIONS = ['1920*1080_8000K', '1280*720_3300K', '960*540_2000K'];
 const { Option } = Select;
 
 

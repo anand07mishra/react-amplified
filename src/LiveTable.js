@@ -112,11 +112,39 @@ class LiveTable extends React.Component {
       title: 'Status',
       dataIndex: 'state',
       key: 'state',
-      render: text => (
+      render: (text, record) => (
         text === 'RUNNING' ?
-          <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} defaultChecked onChange={this.onChange} />
+          <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} defaultChecked onChange={() => {
+            let statusVal = (text === 'IDLE') ? "ON" : "OFF";
+            console.log(`Current Channel Status ${statusVal}`);
+            API.post('LiveChannelHandler-API', '/admin/live/updateChannel', {
+              body: {
+                "channelId": record.id,
+                "channelName": record.name,
+                "channelStatus": "OFF"
+              },
+            }).then((result) => {
+              console.log(result);
+            }).catch(err => {
+              console.log(err);
+            })
+          }} />
           :
-          <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} onChange={this.onChange} />
+          <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} onChange={() => {
+            let statusVal = (text === 'IDLE') ? "ON" : "OFF";
+            console.log(`Current Channel Status ${statusVal}`);
+            API.post('LiveChannelHandler-API', '/admin/live/updateChannel', {
+              body: {
+                "channelId": record.id,
+                "channelName": record.name,
+                "channelStatus": "OFF"
+              },
+            }).then((result) => {
+              console.log(result);
+            }).catch(err => {
+              console.log(err);
+            })
+          }} />
       )
     },
     {
@@ -130,10 +158,10 @@ class LiveTable extends React.Component {
       key: 'livestream',
       render: (channnelId) => (
         <Button id={channnelId} type="primary" ghost size='medium' onClick={() => {
-          API.get('LiveChannelHandler-API', '/admin/live/liveStreamChannel/' + channnelId, {}).then((result) => {            
+          API.get('LiveChannelHandler-API', '/admin/live/liveStreamChannel/' + channnelId, {}).then((result) => {
             this.setState({
               modalData: result.responseBody
-            });            
+            });
           }).catch(err => {
             console.log(err);
           });
@@ -158,10 +186,6 @@ class LiveTable extends React.Component {
       tableData: [],
       modalData: []
     }
-  }
-
-  onChange = (checked) => {
-    console.log(`switch to ${checked}`);
   }
 
   onClose = (e) => {
@@ -236,7 +260,7 @@ class LiveTable extends React.Component {
             <Descriptions.Item label="Stream Key">{this.state.modalData.streamKey}</Descriptions.Item>
           </Descriptions>
           <Descriptions layout="vertical" bordered>
-            <Descriptions.Item label="Live Stream Player"><ReactPlayer pip='true' controls='true' width='500px' height='320px' url="https://b6d76811d0c6e6deca3d996b9ed217a8.egress.mediapackage-vod.us-west-2.amazonaws.com/out/v1/e083073b210e4b31991bd9ea953a5762/961f20833e764911bcec6ed14eea7438/a2fb3565f1e04cd4b4a4d2a8fe4a6ab8/index.m3u8"/></Descriptions.Item>
+            <Descriptions.Item label="Live Stream Player"><ReactPlayer pip={true} controls={true} width='500px' height='320px' url="https://b6d76811d0c6e6deca3d996b9ed217a8.egress.mediapackage-vod.us-west-2.amazonaws.com/out/v1/e083073b210e4b31991bd9ea953a5762/961f20833e764911bcec6ed14eea7438/a2fb3565f1e04cd4b4a4d2a8fe4a6ab8/index.m3u8" /></Descriptions.Item>
           </Descriptions>
         </Modal>
         <Button type="primary"><NavLink to="/CreateChannel">Create Channel</NavLink></Button>
