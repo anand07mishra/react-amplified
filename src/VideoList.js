@@ -38,14 +38,12 @@ class VideoList extends React.Component {
         this.setState({ [e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id]: false });
     };
 
-    componentDidMount() {
-        console.log("Inside componentDidMount");
+    componentDidMount() {        
         API.get(apiName, '/admin/asseturls', myInit).then((result) => {
             this.setState({
                 data: result.responseBody
             });
-        }).catch(err => {
-            console.log("ERROR");
+        }).catch(err => {            
             console.log(err);
         });
 
