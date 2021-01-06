@@ -3,21 +3,11 @@ import 'antd/dist/antd.css';
 import './index.css';
 import { Form, Input, Button } from 'antd';
 import { Select } from 'antd';
-import { API, Amplify } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import 'antd/dist/antd.css';
 import './index.css';
 import { Tooltip } from 'antd';
 
-Amplify.configure({
-  API: {
-    endpoints: [
-      {
-        name: "LiveChannelHandler-API",
-        endpoint: "https://11pz449in4.execute-api.us-west-2.amazonaws.com/live"
-      }
-    ]
-  }
-});
 const layout = {
   labelCol: {
     span: 4,

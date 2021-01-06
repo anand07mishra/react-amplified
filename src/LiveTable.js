@@ -1,19 +1,14 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
 import { Table, Space, Button, Switch, Input, Form, Popconfirm, Modal, Descriptions } from 'antd';
-import { Amplify, API } from 'aws-amplify';
+import { API } from 'aws-amplify';
 import { NavLink } from 'react-router-dom';
 import ReactPlayer from 'react-player/lazy'
 
-Amplify.configure({
-  API: {
-    endpoints: [
-      {
-        name: "LiveChannelHandler-API",
-        endpoint: "https://11pz449in4.execute-api.us-west-2.amazonaws.com/users"
-      }
-    ]
-  }
-});
+const apiName = 'LiveChannelHandler-API';
+
+const myInit = {
+  header: { contentType: 'application/json' },
+};
 
 const EditableContext = React.createContext();
 
@@ -117,7 +112,7 @@ class LiveTable extends React.Component {
           <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} defaultChecked onChange={() => {
             let statusVal = (text === 'IDLE') ? "ON" : "OFF";
             console.log(`Current Channel Status ${statusVal}`);
-            API.post('LiveChannelHandler-API', '/admin/live/updateChannel', {
+            API.post(apiName, '/admin/live/updateChannel', {
               body: {
                 "channelId": record.id,
                 "channelName": record.name,
@@ -133,7 +128,7 @@ class LiveTable extends React.Component {
           <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} onChange={() => {
             let statusVal = (text === 'IDLE') ? "ON" : "OFF";
             console.log(`Current Channel Status ${statusVal}`);
-            API.post('LiveChannelHandler-API', '/admin/live/updateChannel', {
+            API.post(apiName, '/admin/live/updateChannel', {
               body: {
                 "channelId": record.id,
                 "channelName": record.name,
@@ -158,7 +153,11 @@ class LiveTable extends React.Component {
       key: 'livestream',
       render: (channnelId) => (
         <Button id={channnelId} type="primary" ghost size='medium' onClick={() => {
-          API.get('LiveChannelHandler-API', '/admin/live/liveStreamChannel/' + channnelId, {}).then((result) => {
+          API.post(apiName, '/admin/live/liveStreamChannel/', {
+            body: {
+              "channelId": channnelId
+            },
+          }).then((result) => {
             this.setState({
               modalData: result.responseBody
             });
@@ -211,7 +210,7 @@ class LiveTable extends React.Component {
   };
 
   componentDidMount() {
-    API.get('LiveChannelHandler-API', '/admin/live/listChannels', {}).then((result) => {
+    API.get('LiveChannelHandler-API', '/admin/live/listChannels', myInit).then((result) => {
       this.setState({
         tableData: result.responseBody.channels
       });

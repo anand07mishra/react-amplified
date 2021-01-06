@@ -1,17 +1,12 @@
 import React from 'react'
 import { Table } from 'antd';
-import { Amplify, API } from 'aws-amplify';
+import { API } from 'aws-amplify';
 
-Amplify.configure({
-    API: {
-        endpoints: [
-            {
-                name: "AdminVODAPI",
-                endpoint: "https://kccs8cd1ci.execute-api.us-west-2.amazonaws.com/user"
-            }
-        ]
-    }
-});
+const apiName = 'AdminVODAPI';
+
+const myInit = {
+    header: { contentType: 'application/json' },
+};
 
 const columns = [
     {
@@ -35,11 +30,10 @@ class MappingTable extends React.Component {
     }
 
     componentDidMount() {
-        API.get('AdminVODAPI', '/admin/asseturls', {}).then((result) => {
+        API.get(apiName, '/admin/asseturls', myInit).then((result) => {
             this.setState({
                 data: result.responseBody
             });
-            console.log(result);
         }).catch(err => {
             console.log(err);
         });
