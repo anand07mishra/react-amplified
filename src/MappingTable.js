@@ -5,7 +5,10 @@ import { API } from 'aws-amplify';
 const apiName = 'AdminVODAPI';
 
 const myInit = {
-    header: { contentType: 'application/json' },
+    header: {
+        contentType: 'application/json',
+        'x-api-key': 'hGR4ZmgIaF9r4QJKaktDA8HWTMnWAFBA7MWBSiyp',
+    },
 };
 
 const columns = [

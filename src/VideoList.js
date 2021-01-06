@@ -15,7 +15,10 @@ const gridStyle = {
 const apiName = 'AdminVODAPI';
 
 const myInit = {
-    header: { contentType: 'application/json' },
+    header: {
+        contentType: 'application/json',
+        'x-api-key': 'hGR4ZmgIaF9r4QJKaktDA8HWTMnWAFBA7MWBSiyp',
+    },
 };
 
 class VideoList extends React.Component {
@@ -38,12 +41,12 @@ class VideoList extends React.Component {
         this.setState({ [e.currentTarget.parentElement.parentElement.parentElement.parentElement.parentElement.id]: false });
     };
 
-    componentDidMount() {        
+    componentDidMount() {
         API.get(apiName, '/admin/asseturls', myInit).then((result) => {
             this.setState({
                 data: result.responseBody
             });
-        }).catch(err => {            
+        }).catch(err => {
             console.log(err);
         });
 

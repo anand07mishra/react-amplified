@@ -53,15 +53,22 @@
 }
 
 .site-drawer-render-in-current-wrapper {
-  position: relative;
-  padding: 48px;
-  overflow: hidden;
-  text-align: center;
-  background: #fafafa;
-  border: 1px solid #ebedf0;
+  position     : relative;
+  padding      : 48px;
+  overflow     : hidden;
+  text-align   : center;
+  background   : #fafafa;
+  border       : 1px solid #ebedf0;
   border-radius: 2px;
 }
 
-th,td{
+th,
+td {
   text-align: left;
+}
+
+:root {
+  --amplify-primary-color: #1890FF;
+  --amplify-primary-tint: #108BFE;
+  --amplify-primary-shade: #59AEFE;
 }

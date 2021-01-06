@@ -16,6 +16,7 @@ import MappingTable from './MappingTable';
 import LiveTable from './LiveTable';
 import CreateChannel from './CreateChannel';
 import Home from './Home';
+import { AmplifySignOut } from '@aws-amplify/ui-react';
 
 import { Layout, Menu } from 'antd';
 
@@ -54,6 +55,7 @@ class SiderLayout extends React.Component {
                 <Menu.Item key="5">Profile</Menu.Item>
                 <Menu.Item key="6">Settings</Menu.Item>
                 <Menu.Item key="7">Notifications</Menu.Item>
+                <Menu.Item key="8"><AmplifySignOut buttonText="Signout"></AmplifySignOut></Menu.Item>
               </SubMenu>
             </Menu>
           </Sider>
