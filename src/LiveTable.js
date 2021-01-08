@@ -99,8 +99,6 @@ class LiveTable extends React.Component {
       title: 'Channel Name',
       dataIndex: 'name',
       key: 'name',
-      defaultSortOrder: 'descend',
-      sorter: (a, b) => a.name.length - b.name.length,
       editable: true,
     },
     {
