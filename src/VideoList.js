@@ -1,5 +1,4 @@
 import React from 'react'
-import 'antd/dist/antd.css';
 import { Card, Descriptions, Button, Space, Drawer, Typography, message } from 'antd';
 import { Storage, API } from 'aws-amplify';
 import { InfoCircleTwoTone } from '@ant-design/icons';

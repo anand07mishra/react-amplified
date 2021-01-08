@@ -1,5 +1,4 @@
 import React from 'react';
-import 'antd/dist/antd.css';
 import { Storage } from 'aws-amplify';
 import { Upload, message, Spin } from 'antd';
 import { InboxOutlined, LoadingOutlined } from '@ant-design/icons';

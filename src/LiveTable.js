@@ -116,7 +116,7 @@ class LiveTable extends React.Component {
               body: {
                 "channelId": record.id,
                 "channelName": record.name,
-                "channelStatus": "OFF"
+                "channelStatus": statusVal
               },
             }).then((result) => {
               console.log(result);
@@ -132,7 +132,7 @@ class LiveTable extends React.Component {
               body: {
                 "channelId": record.id,
                 "channelName": record.name,
-                "channelStatus": "OFF"
+                "channelStatus": statusVal
               },
             }).then((result) => {
               console.log(result);
@@ -151,8 +151,8 @@ class LiveTable extends React.Component {
       title: 'Live Stream',
       dataIndex: 'id',
       key: 'livestream',
-      render: (channnelId) => (
-        <Button id={channnelId} type="primary" ghost size='medium' onClick={() => {
+      render: (channnelId, record) => (
+        <Button id={channnelId} disabled={(record.state === 'IDLE') ? true : false} type="primary" ghost size='medium' onClick={() => {
           API.post(apiName, '/admin/live/liveStreamChannel/', {
             body: {
               "channelId": channnelId
@@ -172,9 +172,10 @@ class LiveTable extends React.Component {
     },
     {
       title: 'Action',
-      key: '',
-      render: (record) => (
-        <Popconfirm title="Sure to delete?" onConfirm={() => this.handleDelete(record.key)}>
+      dataIndex: 'name',
+      key: 'name',
+      render: (channelName, record) => (
+        <Popconfirm title={`Are you sure to delete channel ${channelName}?`} onConfirm={() => this.handleDelete(record.id)} okText="Confirm">
           <Button type="primary" danger size='medium'>Delete</Button>
         </Popconfirm>
       ),
@@ -194,11 +195,9 @@ class LiveTable extends React.Component {
   };
 
   handleDelete = (key) => {
-    const dataSource = [...this.state.dataSource];
-    this.setState({
-      dataSource: dataSource.filter((item) => item.key !== key),
-    });
+    console.log(key);
   };
+
   handleSave = (row) => {
     const newData = [...this.state.dataSource];
     const index = newData.findIndex((item) => row.key === item.key);
@@ -259,7 +258,7 @@ class LiveTable extends React.Component {
             <Descriptions.Item label="Stream Key">{this.state.modalData.streamKey}</Descriptions.Item>
           </Descriptions>
           <Descriptions layout="vertical" bordered>
-            <Descriptions.Item label="Live Stream Player"><ReactPlayer pip={true} controls={true} width='500px' height='320px' url="https://b6d76811d0c6e6deca3d996b9ed217a8.egress.mediapackage-vod.us-west-2.amazonaws.com/out/v1/e083073b210e4b31991bd9ea953a5762/961f20833e764911bcec6ed14eea7438/a2fb3565f1e04cd4b4a4d2a8fe4a6ab8/index.m3u8" /></Descriptions.Item>
+            <Descriptions.Item label="Live Stream Player"><ReactPlayer pip={true} controls={true} width='500px' height='320px' url={this.state.modalData.channelCDNUrl} /></Descriptions.Item>
           </Descriptions>
         </Modal>
         <Button type="primary"><NavLink to="/CreateChannel">Create Channel</NavLink></Button>
