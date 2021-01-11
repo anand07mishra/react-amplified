@@ -10,6 +10,7 @@ import {
   HomeOutlined,
   YoutubeOutlined,
   UserOutlined,
+  LogoutOutlined,
 } from '@ant-design/icons';
 import Playlist from './Playlist';
 import MappingTable from './MappingTable';
@@ -55,8 +56,10 @@ class SiderLayout extends React.Component {
                 <Menu.Item key="5">Profile</Menu.Item>
                 <Menu.Item key="6">Settings</Menu.Item>
                 <Menu.Item key="7">Notifications</Menu.Item>
-                <Menu.Item key="8"><AmplifySignOut buttonText="Signout"></AmplifySignOut></Menu.Item>
               </SubMenu>
+              <Menu.Item key="8" icon={<LogoutOutlined />}>
+                <AmplifySignOut buttonText="Signout"></AmplifySignOut>
+              </Menu.Item>
             </Menu>
           </Sider>
           <Layout className="site-layout">

@@ -1,10 +1,13 @@
 import React, { useContext, useState, useEffect, useRef } from 'react'
-import { Table, Space, Button, Switch, Input, Form, Popconfirm, Modal, Descriptions } from 'antd';
+import { Table, Space, Button, Switch, Input, Form, Popconfirm, Modal, Descriptions, message, Spin } from 'antd';
 import { API } from 'aws-amplify';
 import { NavLink } from 'react-router-dom';
 import ReactPlayer from 'react-player/lazy'
+import { LoadingOutlined, PlusOutlined } from '@ant-design/icons';
 
 const apiName = 'LiveChannelHandler-API';
+
+const antIcon = <LoadingOutlined style={{ fontSize: 24 }} spin />;
 
 const myInit = {
   header: { contentType: 'application/json' },
@@ -109,7 +112,6 @@ class LiveTable extends React.Component {
         text === 'RUNNING' ?
           <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} defaultChecked onChange={() => {
             let statusVal = (text === 'IDLE') ? "ON" : "OFF";
-            console.log(`Current Channel Status ${statusVal}`);
             API.post(apiName, '/admin/live/updateChannel', {
               body: {
                 "channelId": record.id,
@@ -121,11 +123,17 @@ class LiveTable extends React.Component {
             }).catch(err => {
               console.log(err);
             })
+            message.loading('Changing status of Channel...');
+            this.toggle();
+            setTimeout(function () { //Start the timer
+              this.setState({ loading: false });//After 10 second, set render to true              
+              message.info('Refresh the if Channel status is not IDLE or ON');
+              window.location.reload();
+            }.bind(this), 10000)
           }} />
           :
           <Switch checkedChildren='ON' unCheckedChildren={text !== 'RUNNING' ? text : null} onChange={() => {
             let statusVal = (text === 'IDLE') ? "ON" : "OFF";
-            console.log(`Current Channel Status ${statusVal}`);
             API.post(apiName, '/admin/live/updateChannel', {
               body: {
                 "channelId": record.id,
@@ -137,20 +145,22 @@ class LiveTable extends React.Component {
             }).catch(err => {
               console.log(err);
             })
+            message.loading('Changing status of Channel...');
+            this.toggle();
+            setTimeout(function () { //Start the timer
+              this.setState({ loading: false });//After 10 second, set render to true              
+              message.info('Refresh the if Channel status is not IDLE or ON');
+              window.location.reload();
+            }.bind(this), 10000)
           }} />
       )
-    },
-    {
-      title: 'Created',
-      dataIndex: 'codec',
-      key: 'codec',
     },
     {
       title: 'Live Stream',
       dataIndex: 'id',
       key: 'livestream',
       render: (channnelId, record) => (
-        <Button id={channnelId} disabled={(record.state === 'IDLE') ? true : false} type="primary" ghost size='medium' onClick={() => {
+        <Button id={channnelId} disabled={(record.state !== 'RUNNING') ? true : false} type="primary" ghost size='medium' onClick={() => {
           API.post(apiName, '/admin/live/liveStreamChannel/', {
             body: {
               "channelId": channnelId
@@ -173,8 +183,24 @@ class LiveTable extends React.Component {
       dataIndex: 'name',
       key: 'name',
       render: (channelName, record) => (
-        <Popconfirm title={`Are you sure to delete channel ${channelName}?`} onConfirm={() => this.handleDelete(record.id)} okText="Confirm">
-          <Button type="primary" danger size='medium'>Delete</Button>
+        <Popconfirm title={`Are you sure to delete channel ${channelName}?`} onConfirm={() => {
+          API.post(apiName, '/admin/live/deleteChannel', {
+            body: {
+              "channelId": record.id
+            },
+          }).then((result) => {
+            console.log(result);
+          }).catch(err => {
+            console.log(err);
+          })
+          this.toggle();
+          setTimeout(function () { //Start the timer
+            this.setState({ loading: false });//After 4 second, set render to true              
+            message.success('Channel deleted successfully!');
+            window.location.reload();
+          }.bind(this), 4000)
+        }} okText="Confirm">
+          <Button type="primary" disabled={(record.state === 'RUNNING') ? true : false} danger size='medium'>Delete</Button>
         </Popconfirm>
       ),
     }
@@ -182,18 +208,18 @@ class LiveTable extends React.Component {
     this.state = {
       visible: false,
       tableData: [],
-      modalData: []
+      modalData: [],
+      loading: false
     }
+    this.toggle = value => {
+      this.setState({ loading: value });
+    };
   }
 
   onClose = (e) => {
     this.setState({
       visible: false,
     });
-  };
-
-  handleDelete = (key) => {
-    console.log(key);
   };
 
   handleSave = (row) => {
@@ -242,7 +268,7 @@ class LiveTable extends React.Component {
     });
 
     return (
-      <Space direction="vertical">
+      <Spin indicator={antIcon} spinning={this.state.loading} delay={500}>
         <Modal
           title="Live Channel Details"
           centered
@@ -259,14 +285,16 @@ class LiveTable extends React.Component {
             <Descriptions.Item label="Live Stream Player"><ReactPlayer pip={true} controls={true} width='500px' height='320px' url={this.state.modalData.channelCDNUrl} /></Descriptions.Item>
           </Descriptions>
         </Modal>
-        <Button type="primary"><NavLink to="/CreateChannel">Create Channel</NavLink></Button>
-        <Table
-          components={components}
-          rowClassName={() => 'editable-row'}
-          bordered
-          dataSource={this.state.tableData}
-          columns={columns} />
-      </Space >
+        <Space direction="vertical">
+          <Button type="primary" icon={<PlusOutlined />} size='large' onClick={() => { this.props.history.push('/CreateChannel') }}>Create Channel</Button>
+          <Table
+            components={components}
+            rowClassName={() => 'editable-row'}
+            bordered
+            dataSource={this.state.tableData}
+            columns={columns} />
+        </Space >
+      </Spin >
     );
   }
 }
