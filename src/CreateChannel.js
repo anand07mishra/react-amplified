@@ -1,5 +1,5 @@
 import React from 'react';
-import { Form, Input, Button, Radio, Select, Card, Space, message, Spin } from 'antd';
+import { Form, Input, Button, Select, Card, Space, message, Spin } from 'antd';
 
 import { API } from 'aws-amplify';
 import { InfoCircleOutlined, LoadingOutlined } from '@ant-design/icons';
@@ -75,10 +75,11 @@ class CreateChannel extends React.Component {
               label="Channel Input Type"
               rules={[{ required: true, }]}
             >
-              <Radio.Group>
-                <Radio.Button value="RTMP_PUSH">RTMP_PUSH</Radio.Button>
-                <Radio.Button value="MP4_FILE">MP4_FILE</Radio.Button>
-              </Radio.Group>
+              <Select placeholder="Please Select Channel Input Type">
+                <Select.Option key="RTMP_PUSH" value="RTMP_PUSH">
+                  RTMP_PUSH
+                  </Select.Option>
+              </Select>
             </Form.Item>
             <Form.Item
               name={['channel', 'application_name']}
@@ -106,7 +107,7 @@ class CreateChannel extends React.Component {
               ]} tooltip={{ title: 'Please make sure to use video resolution equal to or greater than selected resolution, while doing the streaming.', icon: <InfoCircleOutlined /> }}>
               <Select
                 mode="multiple"
-                placeholder="Please select Video Resolution"
+                placeholder="Please Select Video Resolution"
               >
                 {filteredOptions.map(item => (
                   <Select.Option key={item} value={item}>
