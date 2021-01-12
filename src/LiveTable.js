@@ -182,7 +182,7 @@ class LiveTable extends React.Component {
       dataIndex: 'name',
       key: 'name',
       render: (channelName, record) => (
-        <Popconfirm title={`Are you sure to delete channel ${channelName}?`} onConfirm={() => {
+        <Popconfirm placement="left" title={`Are you sure to delete channel ${channelName}?`} onConfirm={() => {
           API.post(apiName, '/admin/live/deleteChannel', {
             body: {
               "channelId": record.id

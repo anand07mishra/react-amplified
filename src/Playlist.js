@@ -9,18 +9,18 @@ export default function Playlist() {
         <Space direction="vertical">
             <Row>
                 <Col span={24}>
-                    <Card title="Upload">
+                    <Card title="Upload" type="inner">
                         <UploadArea />
                     </Card>
                 </Col>
             </Row>
             <Row>
                 <Col span={24}>
-                    <Card title="Playlist" >
+                    <Card title="Playlist" type="inner">
                         <VideoList />
                     </Card>
                 </Col>
-            </Row>            
+            </Row>
         </Space>
     )
 }

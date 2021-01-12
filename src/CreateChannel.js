@@ -57,7 +57,7 @@ class CreateChannel extends React.Component {
   render() {
     return (
       <Spin indicator={antIcon} spinning={this.state.loading} delay={500}>
-        <Card title="Create Channel">
+        <Card title="Create Channel" type="inner">
           <Form layout="vertical" ref={this.formRef} validateMessages={validateMessages} onFinish={this.onFinish}>
             <Form.Item
               name={['channel', 'channel_name']}
@@ -120,6 +120,9 @@ class CreateChannel extends React.Component {
               <Space>
                 <Button type="primary" htmlType="submit">
                   Submit
+              </Button>
+                <Button htmlType="button" onClick={() => { this.props.history.push('/LiveTable') }}>
+                  Cancel
               </Button>
                 <Button htmlType="button" onClick={this.onReset}>
                   Reset
