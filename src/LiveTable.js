@@ -168,6 +168,7 @@ class LiveTable extends React.Component {
             this.setState({
               modalData: result.responseBody
             });
+            console.log(result);
           }).catch(err => {
             console.log(err);
           });
