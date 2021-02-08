@@ -84,4 +84,4 @@ class SiderLayout extends React.Component {
   }
 }
 
-export default SiderLayout
+export default SiderLayout;
